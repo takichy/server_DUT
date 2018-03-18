@@ -30,10 +30,10 @@ app.use(function (req, res, next) {
 var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
-	port: 8889,
-    user     : 'root',
-    password : 'root',
-    database : 'db_pigeon'
+	//port: 8889,
+    user     : 'PFE',
+    password : '123456',
+    database : 'pfe'
 });
 
 
@@ -46,30 +46,54 @@ connection.connect(function(error){
 });
 
 
-app.post('/insert',function(req,resp){
-	console.log("req body: ", req.body);
-	//about mysql requet...
-	connection.query(`insert into user values('8','${req.body.first_name}','${req.body.lase_name}','${req.body.email}','${req.body.phone}','${req.body.address}','france','toulouse',${req.body.zip})`,
+app.post('/insertUser',function(req,resp){
+	connection.query(`insert into user values('5','${req.body.first_name}','${req.body.lase_name}','${req.body.email}','${req.body.phone}','${req.body.address}','france','toulouse',${req.body.zip})`,
 		function(error, rows, fields){
 			if(!!error){
 				console.log('error in the query insert', error);
 			} else{
-				console.log('SUCCESSFUL QUERY insert');
+				console.log('SUCCESSFUL QUERY insert User');
 				resp.send(true);
 			}
 		}
 	);
 });
 
-app.get('/select_pigeon/:id',function(req,resp){
+app.post('/insertPigeon',function(req,resp){
+	connection.query(`insert into user values('5','${req.body.first_name}','${req.body.lase_name}','${req.body.email}','${req.body.phone}','${req.body.address}','france','toulouse',${req.body.zip})`,
+		function(error, rows, fields){
+			if(!!error){
+				console.log('error in the query insert', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert Pigeon');
+				resp.send(true);
+			}
+		}
+	);
+});
+
+app.get('/selectAll',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query('select * from user',function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select');
+			resp.send(rows);
+		}
+	});
+})
+
+app.get('/selectPigeon/:id',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
 	connection.query(`select * from user where id_user='${req.params.id}'`,function(error,rows,fields){
 		if(!!error){
-			console.log('error in the query select');
+			console.log('error in the query select', error);
 		} else{
 			console.log('SUCCESSFUL QUERY select');
-			resp.send(rows[0].nom);
+			resp.send(rows);
 		}
 	});
 })
