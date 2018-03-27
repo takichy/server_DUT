@@ -30,29 +30,27 @@ app.use(function (req, res, next) {
 var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
-	//port: 8889,
+	/*port: 8889,*/
     user     : 'PFE',
     password : '123456',
-    database : 'pfe'
+    database : 'db_pigeon'
 });
-
 
 connection.connect(function(error){
 	if(!!error){
 		console.log('Error', error);
 	}else{
-		console.log('Connected awlad l97ab');
+		console.log('Connected successful');
 	}
 });
 
-
-app.post('/insertUser',function(req,resp){
-	connection.query(`insert into user values('5','${req.body.first_name}','${req.body.lase_name}','${req.body.email}','${req.body.phone}','${req.body.address}','france','toulouse',${req.body.zip})`,
-		function(error, rows, fields){
+app.post('/insertUser/:id',function(req,resp){
+	connection.query(`UPDATE user SET nom ='${req.body.last_name}', prenom ='${req.body.first_name}', mail='${req.body.email}', telephone =${req.body.phone}, adresse='${req.body.address}', pays ='${req.body.countries_states}' ,code_postal =${req.body.zip}, ville ='${req.body.countries_city}'where id_user='${req.params.id}'`,
+				function(error, rows, fields){
 			if(!!error){
-				console.log('error in the query insert', error);
+				console.log('error in the query update user', error);
 			} else{
-				console.log('SUCCESSFUL QUERY insert User');
+				console.log('SUCCESSFUL QUERY update user ');
 				resp.send(true);
 			}
 		}
@@ -60,12 +58,40 @@ app.post('/insertUser',function(req,resp){
 });
 
 app.post('/insertPigeon',function(req,resp){
-	connection.query(`insert into user values('5','${req.body.first_name}','${req.body.lase_name}','${req.body.email}','${req.body.phone}','${req.body.address}','france','toulouse',${req.body.zip})`,
+	console.log(req.body.couleur);
+	connection.query(`insert into pigeon1(couleur,numero_bague,annee_naissance,sexe,etat,souche,nom_pigeon,pigeonnier,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement)values('${req.body.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.souche}','${req.body.nom_pigeon}','${req.body.pigeonnier}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}')`,
+        function(error, rows, fields){
+			if(!!error){
+				console.log('error in the query insert pigeon for nvaqui', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert pigeon for nvaqui page');
+				resp.send(true);
+			}
+		}
+	);
+});
+
+app.post('/insertNaissance',function(req,resp){
+	console.log(' je suis sur insert nv naissance');
+	connection.query(`insert into pigeon(date_nv_naiss,copain,serie,nid,commentaire,pose,eclos,num_bague_nv)values('${req.body.date_nv_naiss}','${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.commentaire}','${req.body.pose}','${req.body.eclos}',${req.body.num_bague_nv})`,
 		function(error, rows, fields){
 			if(!!error){
-				console.log('error in the query insert', error);
+				console.log('error in the query insert for contact page', error);
 			} else{
-				console.log('SUCCESSFUL QUERY insert Pigeon');
+				console.log('SUCCESSFUL QUERY insert for contact page');
+				resp.send(true);
+			}
+		}
+	);
+});
+
+app.post('/insertMessage',function(req,resp){
+	connection.query(`insert into contact(nom,mail,telephone,objet,message) values('${req.body.nom}','${req.body.email}','${req.body.mobile}','${req.body.subject}','${req.body.message}')`,
+		function(error, rows, fields){
+			if(!!error){
+				console.log('error in the query insert for contact page', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert for contact page');
 				resp.send(true);
 			}
 		}
@@ -83,7 +109,7 @@ app.get('/selectAll',function(req,resp){
 			resp.send(rows);
 		}
 	});
-})
+});
 
 app.get('/selectPigeon/:id',function(req,resp){
 	console.log("req params: ", req.params);
@@ -96,6 +122,19 @@ app.get('/selectPigeon/:id',function(req,resp){
 			resp.send(rows);
 		}
 	});
-})
+});
+
+app.get('/selectUser/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from user where id_user='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select');
+			resp.send(rows);
+		}
+	});
+});
 
 app.listen(1337);
