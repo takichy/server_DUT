@@ -73,7 +73,7 @@ app.post('/insertPigeon',function(req,resp){
 
 app.post('/insertNaissance',function(req,resp){
 	console.log(' je suis sur insert nv naissance');
-	connection.query(`insert into pigeon(date_nv_naiss,copain,serie,nid,commentaire,pose,eclos,num_bague_nv)values('${req.body.date_nv_naiss}','${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.commentaire}','${req.body.pose}','${req.body.eclos}',${req.body.num_bague_nv})`,
+	connection.query(`insert into pigeon(date_nv_naiss,copain,serie,nid,commentaire,pose,eclos,numero_bague)values('${req.body.date_nv_naiss}','${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.commentaire}','${req.body.pose}','${req.body.eclos}',${req.body.numero_bague})`,
 		function(error, rows, fields){
 			if(!!error){
 				console.log('error in the query insert for contact page', error);
@@ -86,7 +86,7 @@ app.post('/insertNaissance',function(req,resp){
 });
 
 app.post('/insertMessage',function(req,resp){
-	connection.query(`insert into contact(nom,mail,telephone,objet,message) values('${req.body.nom}','${req.body.email}','${req.body.mobile}','${req.body.subject}','${req.body.message}')`,
+	connection.query(`insert into contact(nom,mail,telephone,objet,message) values('${req.body.nom}','${req.body.email}',${req.body.mobile},'${req.body.subject}','${req.body.message}')`,
 		function(error, rows, fields){
 			if(!!error){
 				console.log('error in the query insert for contact page', error);
@@ -132,6 +132,19 @@ app.get('/selectUser/:id',function(req,resp){
 			console.log('error in the query select', error);
 		} else{
 			console.log('SUCCESSFUL QUERY select');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectTotal/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select count(*) from pigeon where id_user='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select nombre totale');
 			resp.send(rows);
 		}
 	});
