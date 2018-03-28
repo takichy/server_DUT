@@ -98,6 +98,19 @@ app.post('/insertMessage',function(req,resp){
 	);
 });
 
+app.post('/updateVaccination/:id',function(req,resp){
+	connection.query(`UPDATE pigeon SET date_vaccination =${req.body.date_vaccination}, description='${req.body.description}', termine_par='${req.body.termine_par}', medication='${req.body.medication}', dosage ='${req.body.dosage}' ,commentaire_vaccination ='${req.body.commentaire_vaccination}' where numero_bague=${req.params.id}`,
+				function(error, rows, fields){
+			if(!!error){
+				console.log('error in the query update vaccination', error);
+			} else{
+				console.log('SUCCESSFUL QUERY update vaccination ');
+				resp.send(true);
+			}
+		}
+	);
+});
+
 // get function for get data from data base
 app.get('/selectAll',function(req,resp){
 	console.log("req params: ", req.params);
@@ -185,6 +198,19 @@ app.get('/selectJeunes/:id',function(req,resp){
 			console.log('error in the query select', error);
 		} else{
 			console.log('SUCCESSFUL QUERY select <<count all jeunes>> ');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectVaccination/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from pigeon where numero_bague='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select');
 			resp.send(rows);
 		}
 	});
