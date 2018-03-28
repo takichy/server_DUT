@@ -30,9 +30,9 @@ app.use(function (req, res, next) {
 var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
-	/*port: 8889,*/
-    user     : 'PFE',
-    password : '123456',
+	port: 8889,
+    user     : 'root',
+    password : 'root',
     database : 'db_pigeon'
 });
 
@@ -50,6 +50,7 @@ app.post('/insertUser/:id',function(req,resp){
 				function(error, rows, fields){
 			if(!!error){
 				console.log('error in the query update user', error);
+				resp.sendStatus(400);
 			} else{
 				console.log('SUCCESSFUL QUERY update user ');
 				resp.send(true);
@@ -154,11 +155,11 @@ app.get('/selectUser/:id',function(req,resp){
 app.get('/selectTotal/:id',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
-	connection.query(`select count(*) from pigeon where id_user='${req.params.id}'`,function(error,rows,fields){
+	connection.query(`select count(*) as totalStatique from pigeon where id_user='${req.params.id}'`,function(error,rows,fields){
 		if(!!error){
 			console.log('error in the query select', error);
 		} else{
-			console.log('SUCCESSFUL QUERY select <<count all>> ');
+			console.log('SUCCESSFUL QUERY select <<count all>> ', rows[0].totalStatique);
 			resp.send(rows);
 		}
 	});
