@@ -40,10 +40,11 @@ connection.connect(function(error){
 	if(!!error){
 		console.log('Error', error);
 	}else{
-		console.log('Connected successful');
+		console.log('Connected xD');
 	}
 });
 
+// post function for send data to data base 
 app.post('/insertUser/:id',function(req,resp){
 	connection.query(`UPDATE user SET nom ='${req.body.last_name}', prenom ='${req.body.first_name}', mail='${req.body.email}', telephone =${req.body.phone}, adresse='${req.body.address}', pays ='${req.body.countries_states}' ,code_postal =${req.body.zip}, ville ='${req.body.countries_city}'where id_user='${req.params.id}'`,
 				function(error, rows, fields){
@@ -58,8 +59,8 @@ app.post('/insertUser/:id',function(req,resp){
 });
 
 app.post('/insertPigeon',function(req,resp){
-	console.log(req.body.couleur);
-	connection.query(`insert into pigeon1(couleur,numero_bague,annee_naissance,sexe,etat,souche,nom_pigeon,pigeonnier,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement)values('${req.body.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.souche}','${req.body.nom_pigeon}','${req.body.pigeonnier}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}')`,
+	console.log(req.body.numero_bague);
+	connection.query(`insert into pigeon (numero_bague,annee_naissance,sexe,etat,souche,nom_pigeon,pigeonnier,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement) values(${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.souche}','${req.body.nom_pigeon}','${req.body.pigeonnier}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}')`,
         function(error, rows, fields){
 			if(!!error){
 				console.log('error in the query insert pigeon for nvaqui', error);
@@ -72,8 +73,7 @@ app.post('/insertPigeon',function(req,resp){
 });
 
 app.post('/insertNaissance',function(req,resp){
-	console.log(' je suis sur insert nv naissance');
-	connection.query(`insert into pigeon(date_nv_naiss,copain,serie,nid,commentaire,pose,eclos,numero_bague)values('${req.body.date_nv_naiss}','${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.commentaire}','${req.body.pose}','${req.body.eclos}',${req.body.numero_bague})`,
+	connection.query(`insert into pigeon(date_nv_naiss,copain,serie,nid,commentaire,pose,eclos,numero_bague)values(${req.body.date_nv_naiss},'${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.commentaire}','${req.body.pose}','${req.body.eclos}',${req.body.numero_bague})`,
 		function(error, rows, fields){
 			if(!!error){
 				console.log('error in the query insert for contact page', error);
@@ -98,6 +98,7 @@ app.post('/insertMessage',function(req,resp){
 	);
 });
 
+// get function for get data from data base
 app.get('/selectAll',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
@@ -114,7 +115,7 @@ app.get('/selectAll',function(req,resp){
 app.get('/selectPigeon/:id',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
-	connection.query(`select * from user where id_user='${req.params.id}'`,function(error,rows,fields){
+	connection.query(`select * from pigeon where id_user='${req.params.id}'`,function(error,rows,fields){
 		if(!!error){
 			console.log('error in the query select', error);
 		} else{
@@ -144,7 +145,46 @@ app.get('/selectTotal/:id',function(req,resp){
 		if(!!error){
 			console.log('error in the query select', error);
 		} else{
-			console.log('SUCCESSFUL QUERY select nombre totale');
+			console.log('SUCCESSFUL QUERY select <<count all>> ');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectFemales/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select count(*) from pigeon where id_user='${req.params.id}' and sexe = 'Female'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select <<count all females>> ');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectMales/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select count(*) from pigeon where id_user='${req.params.id}' and sexe = 'Male'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select <<count all males>> ');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectJeunes/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select count(*) from pigeon where id_user='${req.params.id}' and sexe = 'Jeune'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select <<count all jeunes>> ');
 			resp.send(rows);
 		}
 	});
