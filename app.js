@@ -27,23 +27,23 @@ app.use(function (req, res, next) {
     next();
 });
 
-/*var connection = mysql.createConnection({
+var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
 	port: 8889,
     user     : 'root',
     password : 'root',
     database : 'db_pigeon'
-});*/
-
-var connection = mysql.createConnection({
-	//properties...
-	host     : 'localhost',
-	/*port: 8889,*/
-    user     : 'PFE',
-    password : '123456',
-    database : 'db_pigeon'
 });
+
+// var connection = mysql.createConnection({
+// 	//properties...
+// 	host     : 'localhost',
+// 	/*port: 8889,*/
+//     user     : 'PFE',
+//     password : '123456',
+//     database : 'db_pigeon'
+// });
 
 connection.connect(function(error){
 	if(!!error){
@@ -142,6 +142,18 @@ app.get('/selectPigeon/:id',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
 	connection.query(`select * from pigeon where id_user='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectAllPigeon',function(req,resp){
+	//about mysql requet...
+	connection.query('select * from pigeon',function(error,rows,fields){
 		if(!!error){
 			console.log('error in the query select', error);
 		} else{
