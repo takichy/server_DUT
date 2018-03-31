@@ -30,20 +30,11 @@ app.use(function (req, res, next) {
 var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
-	port: 8889,
+  /*port: 8889,*/
     user     : 'root',
     password : 'root',
     database : 'db_pigeon'
 });
-
-// var connection = mysql.createConnection({
-// 	//properties...
-// 	host     : 'localhost',
-// 	/*port: 8889,*/
-//     user     : 'PFE',
-//     password : '123456',
-//     database : 'db_pigeon'
-// });
 
 connection.connect(function(error){
 	if(!!error){
@@ -151,7 +142,22 @@ app.get('/selectPigeon/:id',function(req,resp){
 	});
 });
 
-app.get('/selectAllPigeon',function(req,resp){
+app.get('/selectPigeonUpdate/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from pigeon where numero_bague='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query selec updatet', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select update');
+			resp.send(rows);
+		}
+	});
+});
+
+
+
+/*app.get('/selectAllPigeon',function(req,resp){
 	//about mysql requet...
 	connection.query('select * from pigeon',function(error,rows,fields){
 		if(!!error){
@@ -161,7 +167,7 @@ app.get('/selectAllPigeon',function(req,resp){
 			resp.send(rows);
 		}
 	});
-});
+});*/
 
 app.get('/selectUser/:id',function(req,resp){
 	console.log("req params: ", req.params);
