@@ -115,15 +115,29 @@ app.post('/updateVaccination/:id',function(req,resp){
 	);
 });
 
+app.post('/updatePigeon/:id',function(req,resp){
+	connection.query(`UPDATE pigeon SET annee_naissance=${req.body.annee_naissance}, sexe='${req.body.sexe}', etat='${req.body.etat}', souche ='${req.body.souche}' ,nom_pigeon ='${req.body.nom_pigeon}',pigeonnier ='${req.body.pigeonnier}',num_bague_pere =${req.body.num_bague_pere},annee_naiss_pere =${req.body.annee_naiss_pere},num_bague_mere =${req.body.num_bague_mere},annee_naiss_mere =${req.body.annee_naiss_mere},supplement ='${req.body.supplement}' where numero_bague=${req.params.id}`,
+		function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query update pigeon modal', error);
+			} else{
+				console.log('SUCCESSFUL QUERY update pigeon modal ');
+				resp.send(true);
+			}
+		}
+	);
+});
+
 // get function for get data from data base
 app.get('/selectAll',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
 	connection.query('select * from user',function(error,rows,fields){
 		if(!!error){
-			console.log('error in the query select', error);
+			console.log('error in the query select All', error);
 		} else{
-			console.log('SUCCESSFUL QUERY select');
+			console.log('SUCCESSFUL QUERY select All');
 			resp.send(rows);
 		}
 	});
@@ -134,9 +148,9 @@ app.get('/selectPigeon/:id',function(req,resp){
 	//about mysql requet...
 	connection.query(`select * from pigeon where id_user='${req.params.id}'`,function(error,rows,fields){
 		if(!!error){
-			console.log('error in the query select', error);
+			console.log('error in the query select selectPigeon', error);
 		} else{
-			console.log('SUCCESSFUL QUERY select');
+			console.log('SUCCESSFUL QUERY select selectPigeon');
 			resp.send(rows);
 		}
 	});
@@ -247,5 +261,19 @@ app.get('/selectVaccination/:id',function(req,resp){
 			}
 	});
 });
+
+app.get('/selectPigeonVacciner/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select numero_bague from pigeon where id_user='${req.params.id}' and etat_vaccination = 1`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query selec vaccination option', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select All vaccination option',rows);
+			resp.send(rows);
+		}
+	});
+});
+
 
 app.listen(1337);
