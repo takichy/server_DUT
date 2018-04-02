@@ -80,7 +80,7 @@ app.post('/insertNaissance/:id',function(req,resp){
 				resp.sendStatus(400);
 				console.log('error in the query insert for pigeon nv naissance page', error);
 			} else{
-				console.log('SUCCESSFUL QUERY insert for pigeon nv naissance page',resp);
+				console.log('SUCCESSFUL QUERY insert for pigeon nv naissance page');
 				resp.send(true);
 			}
 		}
