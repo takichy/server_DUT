@@ -59,14 +59,29 @@ app.post('/insertUser/:id',function(req,resp){
 	);
 });
 
-app.post('/insertPigeon/:id',function(req,resp){
-	connection.query(`insert into pigeon (id_user,couleur,numero_bague,annee_naissance,sexe,etat,souche,nom_pigeon,pigeonnier,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement) values(${req.params.id},'${req.params.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.souche}','${req.body.nom_pigeon}','${req.body.pigeonnier}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}')`,
+/*app.post('/insertPigeon/:id',function(req,resp){
+	connection.query(`insert into pigeon (id_user,couleur,numero_bague,annee_naissance,sexe,etat,souche,nom_pigeon,pigeonnier,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement) values(${req.params.id},'${req.body.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.souche}','${req.body.nom_pigeon}','${req.body.pigeonnier}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}')`,
         function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
 				console.log('error in the query insert pigeon for nvaqui page', error);
 			} else{
 				console.log('SUCCESSFUL QUERY insert pigeon for nvaqui page',resp);
+				resp.send(true);
+			}
+		}
+	);
+});*/
+
+app.post('/insertPigeon/:id',function(req,resp){
+	console.log(req.body.image);
+	connection.query(`insert into pigeon (id_user,image,numero_bague) values(${req.params.id},'${req.body.image}',${req.body.numero_bague})`,
+        function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query insert pigeon for nvaqui page', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert pigeon for nvaqui page',req.body.image);
 				resp.send(true);
 			}
 		}
