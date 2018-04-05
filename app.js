@@ -88,19 +88,35 @@ app.post('/insertPigeon/:id',function(req,resp){
 	);
 });
 
-app.post('/insertNaissance/:id',function(req,resp){
-	connection.query(`insert into pigeon(id_user,date_nv_naiss,copain,serie,nid,commentaire,pose,eclos,numero_bague) values(${req.params.id},${req.body.date_nv_naiss},'${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.commentaire}','${req.body.pose}','${req.body.eclos}',${req.body.numero_bague})`,
+app.post('/insertEclos/:id',function(req,resp){
+	console.log(req.params.id);
+	connection.query(`insert into eclosion (id_user,copain,serie,nid,pose,eclos,commentaire) values(${req.params.id},'${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.pose}','${req.body.eclos}','${req.body.commentaire}')`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
-				console.log('error in the query insert for pigeon nv naissance page', error);
+				console.log('error in the query insert for pigeon eclosion page', error);
 			} else{
-				console.log('SUCCESSFUL QUERY insert for pigeon nv naissance page');
+				console.log('SUCCESSFUL QUERY insert for pigeon eclosion page');
 				resp.send(true);
 			}
 		}
 	);
 });
+
+app.post('/updateEclos/:id',function(req,resp){
+	connection.query(`UPDATE eclosion SET  num_bague =${req.body.num_bague} where id_eclosion = ${req.body.id_eclosion} AND id_user = ${req.params.id} `,
+		function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query update eclosion', error);
+			} else{
+				console.log('SUCCESSFUL QUERY update eclosion ',resp);
+				resp.send(true);
+			}
+		}
+	);
+});
+
 
 app.post('/insertMessage',function(req,resp){
 	connection.query(`insert into contact(nom,mail,telephone,objet,message) values('${req.body.nom}','${req.body.email}',${req.body.mobile},'${req.body.subject}','${req.body.message}')`,
@@ -171,6 +187,20 @@ app.get('/selectPigeon/:id',function(req,resp){
 	});
 });
 
+app.get('/selectEclosion/:id_use',function(req,resp){
+	console.log("req params: ", req.params);
+	console.log(req.params.id_use);
+	//about mysql requet...
+	connection.query(`select * from eclosion where id_user='${req.params.id_use}' and num_bague IS NULL`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select select eclosion', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select select eclosion');
+			resp.send(rows);
+		}
+	});
+});
+
 app.get('/selectPigeonUpdate/:id',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
@@ -184,7 +214,18 @@ app.get('/selectPigeonUpdate/:id',function(req,resp){
 	});
 });
 
-
+app.get('/selectEclo/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from eclosion where id_eclosion='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query selec updatet eclosion', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select update eclosion');
+			resp.send(rows);
+		}
+	});
+});
 
 /*app.get('/selectAllPigeon',function(req,resp){
 	//about mysql requet...
@@ -290,5 +331,18 @@ app.get('/selectPigeonVacciner/:id',function(req,resp){
 	});
 });
 
+app.get('/selectLogin/:username/:password',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select id_user from user where mail='${req.params.username}' AND password ='${req.params.password}'`,function(error,rows,fields){
+		if (!!error  || rows[0] == undefined){
+			console.log('error ',error);
+			resp.send(false);
+		} else{
+			console.log('SUCCESSFUL QUERY select ');
+			resp.send(true);
+		}
+	});
+});
 
 app.listen(1337);
