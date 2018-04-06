@@ -443,6 +443,7 @@ app.get('/selectNettoyage/:id',function(req,resp){
 	});
 });
 
+// page login et inscription
 app.get('/selectLogin/:username/:password',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
@@ -455,6 +456,21 @@ app.get('/selectLogin/:username/:password',function(req,resp){
 			resp.send(true);
 		}
 	});
+});
+
+app.post('/insertUser/',function(req,resp){
+
+	connection.query(`insert into user (nom,prenom,mail,telephone,adresse,pays,ville,code_postal,password) values ('${req.params.nom}','${req.body.prenom}','${req.body.emaill}','${req.body.number}','${req.body.adresse}','${req.body.pays}','${req.body.ville}','${req.body.postale}','${req.body.passwordd}')`,
+		function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query insert for user  page', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert for user page');
+				resp.send(true);
+			}
+		}
+	);
 });
 
 app.listen(1337);
