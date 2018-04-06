@@ -59,29 +59,14 @@ app.post('/insertUser/:id',function(req,resp){
 	);
 });
 
-/*app.post('/insertPigeon/:id',function(req,resp){
-	connection.query(`insert into pigeon (id_user,couleur,numero_bague,annee_naissance,sexe,etat,souche,nom_pigeon,pigeonnier,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement) values(${req.params.id},'${req.body.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.souche}','${req.body.nom_pigeon}','${req.body.pigeonnier}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}')`,
+app.post('/insertPigeon/:id',function(req,resp){
+	connection.query(`insert into pigeon (id_user,couleur,numero_bague,annee_naissance,sexe,etat,famille,race,nom_pigeon,source,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement,image) values(${req.params.id},'${req.body.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.famille}',,'${req.body.race}','${req.body.nom_pigeon}','${req.body.source}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}','${req.body.image}')`,
         function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
 				console.log('error in the query insert pigeon for nvaqui page', error);
 			} else{
 				console.log('SUCCESSFUL QUERY insert pigeon for nvaqui page',resp);
-				resp.send(true);
-			}
-		}
-	);
-});*/
-
-app.post('/insertPigeon/:id',function(req,resp){
-	console.log(req.body.image);
-	connection.query(`insert into pigeon (id_user,image,numero_bague) values(${req.params.id},'${req.body.image}',${req.body.numero_bague})`,
-        function(error, rows, fields){
-			if(!!error){
-				resp.sendStatus(400);
-				console.log('error in the query insert pigeon for nvaqui page', error);
-			} else{
-				console.log('SUCCESSFUL QUERY insert pigeon for nvaqui page',req.body.image);
 				resp.send(true);
 			}
 		}
@@ -103,20 +88,35 @@ app.post('/insertEclos/:id',function(req,resp){
 	);
 });
 
-app.post('/updateEclos/:id',function(req,resp){
-	connection.query(`UPDATE eclosion SET  num_bague =${req.body.num_bague} where id_eclosion = ${req.body.id_eclosion} AND id_user = ${req.params.id} `,
+app.post('/insertNettoyage/:id',function(req,resp){
+	console.log(req.params.id);
+	connection.query(`insert into nettoyage (id_user,date_nettoyage,cause_nettoyage,produit,commentaire) values(${req.params.id},'${req.body.date_nettoyage}','${req.body.cause_nettoyage}','${req.body.produit}','${req.body.commentaire}')`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
-				console.log('error in the query update eclosion', error);
+				console.log('error in the query insert nettoyage', error);
 			} else{
-				console.log('SUCCESSFUL QUERY update eclosion ',resp);
+				console.log('SUCCESSFUL QUERY insert for nettoyage');
 				resp.send(true);
 			}
 		}
 	);
 });
 
+app.post('/insertAccouplement/:id',function(req,resp){
+	console.log(req.params.id);
+	connection.query(`insert into pondaison (id_user,female,male,date_accouplement,numero_couple) values(${req.params.id},${req.body.female_acco},${req.body.male_acco},'${req.body.date_accouplement}','${req.body.numero_couple}')`,
+		function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query insert for accouplement page', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert for accouplement page');
+				resp.send(true);
+			}
+		}
+	);
+});
 
 app.post('/insertMessage',function(req,resp){
 	connection.query(`insert into contact(nom,mail,telephone,objet,message) values('${req.body.nom}','${req.body.email}',${req.body.mobile},'${req.body.subject}','${req.body.message}')`,
@@ -132,14 +132,16 @@ app.post('/insertMessage',function(req,resp){
 	);
 });
 
-app.post('/updateVaccination/:id',function(req,resp){
-	connection.query(`UPDATE pigeon SET date_vaccination =${req.body.date_vaccination}, description='${req.body.description}', termine_par='${req.body.termine_par}', medication='${req.body.medication}', dosage ='${req.body.dosage}' ,commentaire_vaccination ='${req.body.commentaire_vaccination}' where numero_bague=${req.params.id}`,
+app.post('/insertVaccination/:id',function(req,resp){
+	console.log(req.params.id);
+	connection.query(`insert into vaccination
+	(id_user,numero_bague,date_vaccination,date_prochaine_vaccination,description,termine_par,medication,dosage,contre,commentaire_vaccination) values(${req.params.id},${req.body.numero_bague},${req.body.date_vaccination},'${req.body.date_prochaine_vaccination}','${req.body.description}','${req.body.termine_par}','${req.body.medication}','${req.body.dosage}','${req.body.contre}','${req.body.commentaire_vaccination}')`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
-				console.log('error in the query update vaccination', error);
+				console.log('error in the query insert for vaccination page', error);
 			} else{
-				console.log('SUCCESSFUL QUERY update vaccination ',resp);
+				console.log('SUCCESSFUL QUERY insert for vaccination page');
 				resp.send(true);
 			}
 		}
@@ -154,6 +156,35 @@ app.post('/updatePigeon/:id',function(req,resp){
 				console.log('error in the query update pigeon modal', error);
 			} else{
 				console.log('SUCCESSFUL QUERY update pigeon modal ');
+				resp.send(true);
+			}
+		}
+	);
+});
+
+app.post('/updatePondaison/:id',function(req,resp){
+	console.log(req.params.id);
+	connection.query(`UPDATE pondaison SET date_oeuf_one =${req.body.date_oeuf_one},date_oeuf_one =${req.body.date_oeuf_one},nid ='${req.body.nid}' where female = ${req.body.female} AND male = ${req.body.male} AND id_user = ${req.params.id}`,
+		function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query insert for pondaison page', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert for pondaison page');
+				resp.send(true);
+			}
+		}
+	);
+});
+
+app.post('/updateEclos/:id',function(req,resp){
+	connection.query(`UPDATE eclosion SET  num_bague =${req.body.num_bague} where id_eclosion = ${req.body.id_eclosion} AND id_user = ${req.params.id} `,
+		function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query update eclosion', error);
+			} else{
+				console.log('SUCCESSFUL QUERY update eclosion ',resp);
 				resp.send(true);
 			}
 		}
@@ -304,28 +335,109 @@ app.get('/selectFemales/:id',function(req,resp){
 	});
 });
 
-app.get('/selectVaccination/:id',function(req,resp){
+app.get('/selectCouple/:id/:id_use',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
-	connection.query(`select * from pigeon where numero_bague='${req.params.id}'`,
+	connection.query(`select * from pondaison where id_user='${req.params.id_use}' AND numero_couple='${req.params.id}'`,
 		function(error,rows,fields){
 			if(!!error){
-				console.log('error in the query select vaccination', error);
+				console.log('error in the query select num male and female', error);
 			} else{
-				console.log('SUCCESSFUL QUERY select vaccination');
+				console.log('SUCCESSFUL QUERY select num male and female');
 				resp.send(rows);
 			}
 	});
 });
 
-app.get('/selectPigeonVacciner/:id',function(req,resp){
+app.get('/selectListVaccin/:id',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
-	connection.query(`select numero_bague from pigeon where id_user='${req.params.id}' and etat_vaccination = 1`,function(error,rows,fields){
+	connection.query(`select * from vaccination where id_user='${req.params.id}'`,
+		function(error,rows,fields){
+			if(!!error){
+				console.log('error in the query select list vaccin', error);
+			} else{
+				console.log('SUCCESSFUL QUERY select list vaccin');
+				resp.send(rows);
+			}
+	});
+});
+
+app.get('/selectListVaccinUrgent/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from vaccination where id_user='${req.params.id}' AND TIMEDIFF('date_prochaine_vaccination','Maintenant()') < 15`,
+		function(error,rows,fields){
+			if(!!error){
+				console.log('error in the query select rappelle vaccin', error);
+			} else{
+				console.log('SUCCESSFUL QUERY select rappelle vaccin');
+				resp.send(rows);
+			}
+	});
+});
+
+app.get('/selectNumBag/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from pigeon where id_user='${req.params.id}'`,
+		function(error,rows,fields){
+			if(!!error){
+				console.log('error in the query select numero de bague', error);
+			} else{
+				console.log('SUCCESSFUL QUERY select numero de bague');
+				resp.send(rows);
+			}
+	});
+});
+
+app.get('/selectPigeonFemale/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select numero_bague from pigeon where id_user='${req.params.id}' and sexe = "Female"`,function(error,rows,fields){
 		if(!!error){
-			console.log('error in the query selec vaccination option', error);
+			console.log('error in the query select pigeon female option', error);
 		} else{
-			console.log('SUCCESSFUL QUERY select All vaccination option',rows);
+			console.log('SUCCESSFUL QUERY select All pigeon female option');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectPigeonMale/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select numero_bague from pigeon where id_user='${req.params.id}' and sexe = "Male"`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select pigeon male option', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select All pigeon male option');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectNumeroCouple/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from pondaison where id_user='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select numero couple', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select numero couple');
+			resp.send(rows);
+		}
+	});
+});
+
+app.get('/selectNettoyage/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from nettoyage where id_user='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select nettoyage', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select nettoyage');
 			resp.send(rows);
 		}
 	});
