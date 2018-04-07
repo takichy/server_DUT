@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
 var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
-  /*port: 8889,*/
+  	// port: 8889,
     user     : 'root',
     password : 'root',
     database : 'db_pigeon'
@@ -60,7 +60,7 @@ app.post('/insertUser/:id',function(req,resp){
 });
 
 app.post('/insertPigeon/:id',function(req,resp){
-	connection.query(`insert into pigeon (id_user,couleur,numero_bague,annee_naissance,sexe,etat,famille,race,nom_pigeon,source,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement,image) values(${req.params.id},'${req.body.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.famille}',,'${req.body.race}','${req.body.nom_pigeon}','${req.body.source}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}','${req.body.image}')`,
+	connection.query(`insert into pigeon (id_user,couleur,numero_bague,annee_naissance,sexe,etat,famille,race,nom_pigeon,source,num_bague_pere,num_bague_mere,annee_naiss_pere,annee_naiss_mere,supplement,image) values(${req.params.id},'${req.body.couleur}',${req.body.numero_bague},${req.body.annee_naissance},'${req.body.sexe}','${req.body.etat}','${req.body.famille}','${req.body.race}','${req.body.nom_pigeon}','${req.body.source}',${req.body.num_bague_pere},${req.body.num_bague_mere},${req.body.annee_naiss_pere},${req.body.annee_naiss_mere},'${req.body.supplement}','${req.body.imageinput}')`,
         function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
