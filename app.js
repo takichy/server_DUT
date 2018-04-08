@@ -1,6 +1,7 @@
 var express = require('express');
 const mysql = require('mysql');
-
+const moment = require('moment');
+ 
 var bodyParser = require('body-parser');
 
 var app = express();
@@ -75,7 +76,7 @@ app.post('/insertPigeon/:id',function(req,resp){
 
 app.post('/insertEclos/:id',function(req,resp){
 	console.log(req.params.id);
-	connection.query(`insert into eclosion (id_user,copain,serie,nid,pose,eclos,commentaire) values(${req.params.id},'${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.pose}','${req.body.eclos}','${req.body.commentaire}')`,
+	connection.query(`insert into eclosion (id_user, date, copain,serie,nid,pose,eclos,commentaire) values(${req.params.id},'${req.body.date_nv_naiss}', '${req.body.copain}','${req.body.serie}','${req.body.nid}','${req.body.pose}','${req.body.eclos}','${req.body.commentaire}')`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
@@ -365,8 +366,11 @@ app.get('/selectListVaccin/:id',function(req,resp){
 
 app.get('/selectListVaccinUrgent/:id',function(req,resp){
 	console.log("req params: ", req.params);
+	const datemin = moment().subtract(15, "days").format("YYYY-MM-DD");
+	const datemax = moment().format("YYYY-MM-DD");
+	console.log("=====", datemin, datemax);
 	//about mysql requet...
-	connection.query(`select * from vaccination where id_user='${req.params.id}' AND TIMEDIFF('date_prochaine_vaccination','Maintenant()') < 15`,
+	connection.query(`select * from vaccination where id_user='${req.params.id}' AND 'date_prochaine_vaccination' >= '${datemin}' AND 'date_prochaine_vaccination' <= '${datemax}'`,
 		function(error,rows,fields){
 			if(!!error){
 				console.log('error in the query select rappelle vaccin', error);
