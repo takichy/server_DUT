@@ -384,16 +384,16 @@ app.get('/selectListVaccin/:id',function(req,resp){
 
 app.get('/selectListVaccinUrgent/:id',function(req,resp){
 	console.log("req params: ", req.params);
-	const datemin = moment().subtract(15, "days").format("YYYY-MM-DD");
-	const datemax = moment().format("YYYY-MM-DD");
+	const  datemax= moment().add(15, "days").format("YYYY-MM-DD");
+	const datemin = moment().format("YYYY-MM-DD");
 	console.log("=====", datemin, datemax);
 	//about mysql requet...
-	connection.query(`select * from vaccination where id_user='${req.params.id}' AND date_prochaine_vaccination >= '${datemin}' AND date_prochaine_vaccination <= '${datemax}'`,
+	connection.query(`select * from vaccination where id_user='${req.params.id}' AND date_prochaine_vaccination > '${datemin}' AND date_prochaine_vaccination < '${datemax}'`,
 		function(error,rows,fields){
 			if(!!error){
 				console.log('error in the query select rappelle vaccin', error);
 			} else{
-				console.log('SUCCESSFUL QUERY select rappelle vaccin',rows);
+				console.log('SUCCESSFUL QUERY select rappelle vaccin');
 				resp.send(rows);
 			}
 	});
