@@ -89,6 +89,21 @@ app.post('/insertEclos/:id',function(req,resp){
 	);
 });
 
+app.post('/insertTraitement/:id',function(req,resp){
+	console.log(req.params.id);
+	connection.query(`insert into traitement (id_user,numero_traitement,date_traitement,traitement_concerne,traitement_contre,commentaire_traitement,traitement_produit,traitement_effet) values(${req.params.id},${req.body.numero_traitement}, '${req.body.date_traitement}','${req.body.traitement_concerne}','${req.body.traitement_contre}','${req.body.commentaire_traitement}','${req.body.traitement_produit}','${req.body.traitement_effet}')`,
+		function(error, rows, fields){
+			if(!!error){
+				resp.sendStatus(400);
+				console.log('error in the query insert for pigeon traitement page', error);
+			} else{
+				console.log('SUCCESSFUL QUERY insert for pigeon traitement page');
+				resp.send(true);
+			}
+		}
+	);
+});
+
 app.post('/insertNettoyage/:id',function(req,resp){
 	console.log(req.params.id);
 	connection.query(`insert into nettoyage (id_user,date_nettoyage,cause_nettoyage,produit,commentaire) values(${req.params.id},'${req.body.date_nettoyage}','${req.body.cause_nettoyage}','${req.body.produit}','${req.body.commentaire}')`,
@@ -136,7 +151,8 @@ app.post('/insertMessage',function(req,resp){
 app.post('/insertVaccination/:id',function(req,resp){
 	console.log(req.params.id);
 	connection.query(`insert into vaccination
-	(id_user,numero_bague,date_vaccination,date_prochaine_vaccination,description,termine_par,medication,dosage,contre,commentaire_vaccination) values(${req.params.id},${req.body.numero_bague},${req.body.date_vaccination},'${req.body.date_prochaine_vaccination}','${req.body.description}','${req.body.termine_par}','${req.body.medication}','${req.body.dosage}','${req.body.contre}','${req.body.commentaire_vaccination}')`,
+	(id_user,numero_bague,date_vaccination,date_prochaine_vaccination,description,termine_par,medication,dosage,contre,commentaire_vaccination) 
+values(${req.params.id},${req.body.numero_bague},'${req.body.date_vaccination}','${req.body.date_prochaine_vaccination}','${req.body.description}','${req.body.termine_par}','${req.body.medication}','${req.body.dosage}','${req.body.contre}','${req.body.commentaire_vaccination}')`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
@@ -150,7 +166,7 @@ app.post('/insertVaccination/:id',function(req,resp){
 });
 
 app.post('/updatePigeon/:id',function(req,resp){
-	connection.query(`UPDATE pigeon SET annee_naissance=${req.body.annee_naissance}, sexe='${req.body.sexe}', etat='${req.body.etat}', souche ='${req.body.souche}' ,nom_pigeon ='${req.body.nom_pigeon}',pigeonnier ='${req.body.pigeonnier}',num_bague_pere =${req.body.num_bague_pere},annee_naiss_pere =${req.body.annee_naiss_pere},num_bague_mere =${req.body.num_bague_mere},annee_naiss_mere =${req.body.annee_naiss_mere},supplement ='${req.body.supplement}' where numero_bague=${req.params.id}`,
+	connection.query(`UPDATE pigeon SET annee_naissance=${req.body.annee_naissance}, sexe='${req.body.sexe}', etat='${req.body.etat}', famille ='${req.body.famille}', race ='${req.body.race}' ,nom_pigeon ='${req.body.nom_pigeon}',source ='${req.body.source}',num_bague_pere =${req.body.num_bague_pere},annee_naiss_pere =${req.body.annee_naiss_pere},num_bague_mere =${req.body.num_bague_mere},annee_naiss_mere =${req.body.annee_naiss_mere},supplement ='${req.body.supplement}' where numero_bague = ${req.body.numero_bague} AND id_user='${req.params.id}'`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
@@ -165,7 +181,9 @@ app.post('/updatePigeon/:id',function(req,resp){
 
 app.post('/updatePondaison/:id',function(req,resp){
 	console.log(req.params.id);
-	connection.query(`UPDATE pondaison SET date_oeuf_one =${req.body.date_oeuf_one},date_oeuf_one =${req.body.date_oeuf_one},nid ='${req.body.nid}' where female = ${req.body.female} AND male = ${req.body.male} AND id_user = ${req.params.id}`,
+	console.log('voila female',req.body.date_oeuf_one);
+	console.log('voila male',req.body.date_oeuf_two);
+	connection.query(`UPDATE pondaison SET date_oeuf_one ='${req.body.date_oeuf_one}',date_oeuf_two ='${req.body.date_oeuf_two}',nid ='${req.body.nid}' where female = ${req.body.female} AND male = ${req.body.male} AND id_user = ${req.params.id}`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
@@ -370,12 +388,12 @@ app.get('/selectListVaccinUrgent/:id',function(req,resp){
 	const datemax = moment().format("YYYY-MM-DD");
 	console.log("=====", datemin, datemax);
 	//about mysql requet...
-	connection.query(`select * from vaccination where id_user='${req.params.id}' AND 'date_prochaine_vaccination' >= '${datemin}' AND 'date_prochaine_vaccination' <= '${datemax}'`,
+	connection.query(`select * from vaccination where id_user='${req.params.id}' AND date_prochaine_vaccination >= '${datemin}' AND date_prochaine_vaccination <= '${datemax}'`,
 		function(error,rows,fields){
 			if(!!error){
 				console.log('error in the query select rappelle vaccin', error);
 			} else{
-				console.log('SUCCESSFUL QUERY select rappelle vaccin');
+				console.log('SUCCESSFUL QUERY select rappelle vaccin',rows);
 				resp.send(rows);
 			}
 	});
@@ -420,6 +438,20 @@ app.get('/selectPigeonMale/:id',function(req,resp){
 		}
 	});
 });
+
+app.get('/selectListTrait/:id',function(req,resp){
+	console.log("req params: ", req.params);
+	//about mysql requet...
+	connection.query(`select * from traitement where id_user='${req.params.id}'`,function(error,rows,fields){
+		if(!!error){
+			console.log('error in the query select traitement', error);
+		} else{
+			console.log('SUCCESSFUL QUERY select traitement');
+			resp.send(rows);
+		}
+	});
+});
+
 
 app.get('/selectNumeroCouple/:id',function(req,resp){
 	console.log("req params: ", req.params);
