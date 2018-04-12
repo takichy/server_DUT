@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
 var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
-  	// port: 8889,
+  	port: 8889,
     user     : 'root',
     password : 'root',
     database : 'db_pigeon'
@@ -474,7 +474,7 @@ app.get('/selectLogin/:username/:password',function(req,resp){
 			resp.send(false);
 		} else{
 			console.log('SUCCESSFUL QUERY select ');
-			resp.send(true);
+			resp.send(rows);
 		}
 	});
 });
