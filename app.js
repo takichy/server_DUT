@@ -10,7 +10,6 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(function (req, res, next) {
-
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -151,8 +150,7 @@ app.post('/insertMessage',function(req,resp){
 app.post('/insertVaccination/:id',function(req,resp){
 	console.log(req.params.id);
 	connection.query(`insert into vaccination
-	(id_user,numero_bague,date_vaccination,date_prochaine_vaccination,description,termine_par,medication,dosage,contre,commentaire_vaccination) 
-values(${req.params.id},${req.body.numero_bague},'${req.body.date_vaccination}','${req.body.date_prochaine_vaccination}','${req.body.description}','${req.body.termine_par}','${req.body.medication}','${req.body.dosage}','${req.body.contre}','${req.body.commentaire_vaccination}')`,
+	(id_user,numero_bague,date_vaccination,date_prochaine_vaccination,description,termine_par,medication,dosage,contre,commentaire_vaccination) values(${req.params.id},${req.body.numero_bague},'${req.body.date_vaccination}','${req.body.date_prochaine_vaccination}','${req.body.description}','${req.body.termine_par}','${req.body.medication}','${req.body.dosage}','${req.body.contre}','${req.body.commentaire_vaccination}')`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
@@ -276,18 +274,6 @@ app.get('/selectEclo/:id',function(req,resp){
 		}
 	});
 });
-
-/*app.get('/selectAllPigeon',function(req,resp){
-	//about mysql requet...
-	connection.query('select * from pigeon',function(error,rows,fields){
-		if(!!error){
-			console.log('error in the query select', error);
-		} else{
-			console.log('SUCCESSFUL QUERY select');
-			resp.send(rows);
-		}
-	});
-});*/
 
 app.get('/selectUser/:id',function(req,resp){
 	console.log("req params: ", req.params);
@@ -452,7 +438,6 @@ app.get('/selectListTrait/:id',function(req,resp){
 	});
 });
 
-
 app.get('/selectNumeroCouple/:id',function(req,resp){
 	console.log("req params: ", req.params);
 	//about mysql requet...
@@ -494,15 +479,15 @@ app.get('/selectLogin/:username/:password',function(req,resp){
 	});
 });
 
-app.post('/insertUser/',function(req,resp){
+app.post('/insertNvUser',function(req,resp){
 
-	connection.query(`insert into user (nom,prenom,mail,telephone,adresse,pays,ville,code_postal,password) values ('${req.params.nom}','${req.body.prenom}','${req.body.emaill}','${req.body.number}','${req.body.adresse}','${req.body.pays}','${req.body.ville}','${req.body.postale}','${req.body.passwordd}')`,
+	connection.query(`insert into user (nom,prenom,mail,telephone,adresse,pays,ville,code_postal,password) values ('${req.body.nom}','${req.body.prenom}','${req.body.email}',${req.body.phone},'${req.body.adresse}','${req.body.pays}','${req.body.ville}',${req.body.code_postal},'${req.body.password}')`,
 		function(error, rows, fields){
 			if(!!error){
 				resp.sendStatus(400);
 				console.log('error in the query insert for user  page', error);
 			} else{
-				console.log('SUCCESSFUL QUERY insert for user page');
+				console.log('SUCCESSFUL QUERY insert for user page',rows);
 				resp.send(true);
 			}
 		}
