@@ -473,8 +473,8 @@ app.get('/selectLogin/:username/:password',function(req,resp){
 			console.log('error ',error);
 			resp.send(false);
 		} else{
-			console.log('SUCCESSFUL QUERY select ');
-			resp.send(rows);
+			console.log('SUCCESSFUL QUERY select ', rows[0]);
+			resp.send(rows[0]);
 		}
 	});
 });
