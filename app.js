@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
 var connection = mysql.createConnection({
 	//properties...
 	host     : 'localhost',
-  	port: 8889,
+  	/*port: 8889,*/
     user     : 'root',
     password : 'root',
     database : 'db_pigeon'
@@ -471,7 +471,7 @@ app.get('/selectLogin/:username/:password',function(req,resp){
 	connection.query(`select id_user from user where mail='${req.params.username}' AND password ='${req.params.password}'`,function(error,rows,fields){
 		if (!!error  || rows[0] == undefined){
 			console.log('error ',error);
-			resp.send(false);
+			resp.sendStatus(400);
 		} else{
 			console.log('SUCCESSFUL QUERY select ', rows[0]);
 			resp.send(rows[0]);
